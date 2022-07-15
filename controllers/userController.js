@@ -1,8 +1,7 @@
 import User from "../models/userModel.js";
-import asyncHandler from "express-async-handler";
 import generateToken from "../utils/generateToken.js";
 
-const authUser = asyncHandler(async (req, res) => {
+const authUser = async (req, res) => {
 	const { email, password } = req.body;
 	const user = await User.findOne({ email });
 	console.log(user);
@@ -18,9 +17,9 @@ const authUser = asyncHandler(async (req, res) => {
 		res.status(401);
 		throw new Error("Invalid email or password");
 	}
-});
+};
 
-const registerUser = asyncHandler(async (req, res) => {
+const registerUser = async (req, res) => {
 	const { name, email, password } = req.body;
 
 	const userExists = await User.findOne({ email });
@@ -45,9 +44,9 @@ const registerUser = asyncHandler(async (req, res) => {
 		res.status(400);
 		throw new Error("Invalid user data");
 	}
-});
+};
 
-const getUser = asyncHandler(async (req, res) => {
+const getUser = async (req, res) => {
 	const user = await User.findById(req.user._id);
 	if (user) {
 		// console.log('hello', user._id, user.username, user.email, user.isAdmin)
@@ -61,9 +60,9 @@ const getUser = asyncHandler(async (req, res) => {
 		res.status(404);
 		throw new Error("User not found");
 	}
-});
+};
 
-const updateUser = asyncHandler(async (req, res) => {
+const updateUser = async (req, res) => {
 	const user = await User.findById(req.user._id);
 	if (user) {
 		user.username = req.body.name || user.name;
@@ -85,9 +84,9 @@ const updateUser = asyncHandler(async (req, res) => {
 		res.status(404);
 		throw new Error("User not found");
 	}
-});
+};
 
-const getUsers = asyncHandler(async (req, res) => {
+const getUsers = async (req, res) => {
 	const limit = Number(req.query.limit) || 20;
 	const page = Number(req.query.page);
 	const skipIndex = (page <= 0 ? 0 : page - 1) * limit;
@@ -97,9 +96,9 @@ const getUsers = asyncHandler(async (req, res) => {
 		.skip(skipIndex)
 		.exec();
 	res.json(users);
-});
+};
 
-const updateUserAdmin = asyncHandler(async (req, res) => {
+const updateUserAdmin = async (req, res) => {
 	const user = await User.findById(req.params.id);
 	if (user) {
 		user.name = req.body.name || user.name;
@@ -121,9 +120,9 @@ const updateUserAdmin = asyncHandler(async (req, res) => {
 		res.status(404);
 		throw new Error("User not found");
 	}
-});
+};
 
-const deleteUser = asyncHandler(async (req, res) => {
+const deleteUser = async (req, res) => {
 	const user = await User.findById(req.params.id);
 	if (user) {
 		await user.remove();
@@ -134,9 +133,9 @@ const deleteUser = asyncHandler(async (req, res) => {
 		res.status(404);
 		throw new Error("User not found");
 	}
-});
+};
 
-const getUserById = asyncHandler(async (req, res) => {
+const getUserById = async (req, res) => {
 	const user = await User.findById(req.params.id).select("-password");
 
 	if (user) {
@@ -150,14 +149,57 @@ const getUserById = asyncHandler(async (req, res) => {
 		res.status(404);
 		throw new Error("User not found");
 	}
-});
-export {
-	authUser,
-	registerUser,
-	getUser,
-	getUsers,
-	updateUserAdmin,
-	updateUser,
-	deleteUser,
-	getUserById,
 };
+
+const routes = {
+	authUser: {
+		method: "post",
+		path: "/api/users/auth/login",
+		handler: authUser,
+	},
+	registerUser: {
+		method: "post",
+		path: "/api/users/",
+		handler: registerUser,
+	},
+	getUser: {
+		method: "get",
+		path: "/api/users/:id",
+		handler: getUser,
+	},
+	getUsers: {
+		method: "get",
+		path: "/api/users/",
+		handler: getUsers,
+	},
+	updateUserAdmin: {
+		method: "put",
+		path: "/api/users/:id",
+		handler: updateUserAdmin,
+		isAdmin: true,
+	},
+	updateUser: {
+		method: "put",
+		path: "/api/users/:id",
+		handler: updateUser,
+	},
+	deleteUser: {
+		method: "delete",
+		path: "/api/users/:id",
+		handler: deleteUser,
+	},
+	getUserById: {
+		method: "get",
+		path: "/api/users/:id",
+		handler: getUserById,
+	},
+};
+export default routes;
+// authUser,
+// registerUser,
+// getUser,
+// getUsers,
+// updateUserAdmin,
+// updateUser,
+// deleteUser,
+// getUserById,

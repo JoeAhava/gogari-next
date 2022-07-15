@@ -1,24 +1,19 @@
-import Discount from '../models/discountModel.js'
-import asyncHandler from 'express-async-handler'
+import Discount from "../models/discountModel.js";
 
-const registerDiscount = asyncHandler(
-    async (req, res) => {
-        const { amount, tags = [], coupon = [], endsAt, product } = req.body
-        const discount = new Discount({
-            amount,
-            tags,
-            coupon,
-            endsAt,
-            product
-        })
+const registerDiscount = async (req, res) => {
+	const { amount, tags = [], coupon = [], endsAt, product } = req.body;
+	const discount = new Discount({
+		amount,
+		tags,
+		coupon,
+		endsAt,
+		product,
+	});
 
-        const createdDiscount = await discount.save()
-        res.status(201).json({
-            createdDiscount
-        })
-    }
-)
+	const createdDiscount = await discount.save();
+	res.status(201).json({
+		createdDiscount,
+	});
+};
 
-export {
-    registerDiscount
-}
+export { registerDiscount };

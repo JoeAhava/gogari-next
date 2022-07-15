@@ -1,16 +1,23 @@
 import Product from "../models/productModel.js";
 import { Category, SubCategory } from "../models/categoryModel.js";
-import asyncHandler from "express-async-handler";
 // import products from '../../frontend/src/products.js'
 
 // @desc Register Product
-const registerProduct = asyncHandler(async (req, res) => {
+const registerProduct = async (req, res) => {
 	try {
-		const { name, inStock, price, brand, image, category, subCategory, description } =
-			req.body.name;
-			// const image = images.url
-        console.log('body', name, image.url, req.body)
-		console.log(image.url)
+		const {
+			name,
+			inStock,
+			price,
+			brand,
+			image,
+			category,
+			subCategory,
+			description,
+		} = req.body.name;
+		// const image = images.url
+		console.log("body", name, image.url, req.body);
+		console.log(image.url);
 		const created = await Product.create({
 			name,
 			inStock,
@@ -26,9 +33,9 @@ const registerProduct = asyncHandler(async (req, res) => {
 		res.status(400);
 		throw new error();
 	}
-});
+};
 
-const updateProduct = asyncHandler(async (req, res) => {
+const updateProduct = async (req, res) => {
 	const { name, instock, price, brand, image, category, description } =
 		req.body;
 
@@ -48,9 +55,9 @@ const updateProduct = asyncHandler(async (req, res) => {
 		res.status(401);
 		throw new Error("Product not found");
 	}
-});
+};
 
-const updateRating = asyncHandler(async (req, res) => {
+const updateRating = async (req, res) => {
 	const { rating, comment } = req.body;
 
 	const product = await Product.findById(req.params.id);
@@ -82,31 +89,33 @@ const updateRating = asyncHandler(async (req, res) => {
 		res.status(401);
 		throw new Error("Product not found");
 	}
-});
+};
 
-const getProducts = asyncHandler(async (req, res) => {
+const getProducts = async (req, res) => {
 	const keyword = req.query.keyword
-    ? {
-        name: {
-          $regex: req.query.keyword,
-          $options: 'i',
-        },
-      }
-    : {}
-	console.log(keyword)
+		? {
+				name: {
+					$regex: req.query.keyword,
+					$options: "i",
+				},
+		  }
+		: {};
+	console.log(keyword);
 	const limit = Number(req.query.limit) || 20;
 	const page = Number(req.query.page);
 	const skipIndex = (page <= 0 ? 0 : page - 1) * limit;
 
 	// const products = await Product.find({}).limit(limit).skip(skipIndex);
 
-	const products = await Product.find({...keyword}).limit(limit).skip(skipIndex);
+	const products = await Product.find({ ...keyword })
+		.limit(limit)
+		.skip(skipIndex);
 	console.log("product multiple sent", products);
 
 	res.json(products);
-});
+};
 
-const getProduct = asyncHandler(async (req, res) => {
+const getProduct = async (req, res) => {
 	const product = await Product.findById(req.params.id);
 	if (product) {
 		res.json(product);
@@ -114,9 +123,9 @@ const getProduct = asyncHandler(async (req, res) => {
 		res.status(404);
 		throw new Error("Product not found");
 	}
-});
+};
 
-const deleteProduct = asyncHandler(async (req, res) => {
+const deleteProduct = async (req, res) => {
 	const product = await Product.findById(req.params.id);
 	if (product) {
 		await product.remove();
@@ -127,7 +136,7 @@ const deleteProduct = asyncHandler(async (req, res) => {
 		res.status(404);
 		throw new Error("Product not found");
 	}
-});
+};
 
 export {
 	registerProduct,

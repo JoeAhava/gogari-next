@@ -1,7 +1,6 @@
 import Order from "../models/orderModel.js";
-import asyncHandler from "express-async-handler";
 
-const registerOrder = asyncHandler(async (req, res) => {
+const registerOrder = async (req, res) => {
 	const {
 		items,
 		shippingAddress,
@@ -34,9 +33,9 @@ const registerOrder = asyncHandler(async (req, res) => {
 		const createdOrder = await order.save();
 		res.status(201).json(createdOrder);
 	}
-});
+};
 
-const updateOrderPaid = asyncHandler(async (req, res) => {
+const updateOrderPaid = async (req, res) => {
 	const order = await Order.findById(req.params.id);
 	if (order) {
 		order.isPaid = true;
@@ -50,9 +49,9 @@ const updateOrderPaid = asyncHandler(async (req, res) => {
 		const updatedOrder = await order.save();
 		res.status(201).json(updatedOrder);
 	}
-});
+};
 
-const updateOrderDelivered = asyncHandler(async (req, res) => {
+const updateOrderDelivered = async (req, res) => {
 	const order = await Order.findById(req.params.id);
 	if (order) {
 		if (
@@ -69,9 +68,9 @@ const updateOrderDelivered = asyncHandler(async (req, res) => {
 			res.status(201).json(updatedOrder);
 		}
 	}
-});
+};
 
-const getOrders = asyncHandler(async (req, res) => {
+const getOrders = async (req, res) => {
 	const limit = Number(req.query.limit) || 20;
 	const page = Number(req.query.page);
 	const skipIndex = (page - 1) * limit;
@@ -82,9 +81,9 @@ const getOrders = asyncHandler(async (req, res) => {
 		.limit(limit)
 		.skip(skipIndex);
 	res.json(orders);
-});
+};
 
-const getOrdersUser = asyncHandler(async (req, res) => {
+const getOrdersUser = async (req, res) => {
 	const orders = await Order.find({ user: req.user._id }).populate(
 		"items.product",
 		"name inStock category -_id",
@@ -96,11 +95,11 @@ const getOrdersUser = asyncHandler(async (req, res) => {
 	} else {
 		res.json(orders);
 	}
-});
+};
 
-const getOrderById = asyncHandler(async (req, res) => {
-	console.log(req.params.id)
-	console.log('user', { user: req.user._id })
+const getOrderById = async (req, res) => {
+	console.log(req.params.id);
+	console.log("user", { user: req.user._id });
 	const order = await Order.findById(req.params.id).populate(
 		"user",
 		"username email",
@@ -111,7 +110,7 @@ const getOrderById = asyncHandler(async (req, res) => {
 		res.status(404);
 		throw new Error("Order not Found");
 	}
-});
+};
 
 export {
 	registerOrder,

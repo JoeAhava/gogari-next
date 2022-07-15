@@ -1,13 +1,12 @@
-import asyncHandler from "express-async-handler";
 import { Category, SubCategory } from "../models/categoryModel.js";
 import Product from "../models/productModel.js";
 
 // @desc Register Category
-const registerCategory = asyncHandler(async (req, res) => {
+const registerCategory = async (req, res) => {
 	try {
 		const { name, image } = req.body;
 		console.log(req.body);
-		console.log(image)
+		console.log(image);
 		const created = await Category.create({
 			name,
 			image: image.url,
@@ -17,10 +16,10 @@ const registerCategory = asyncHandler(async (req, res) => {
 		res.status(400);
 		throw new Error("Category Creating Failed");
 	}
-});
+};
 
 // @desc Register SubCategory
-const registerSubCategory = asyncHandler(async (req, res) => {
+const registerSubCategory = async (req, res) => {
 	/* try {
 		const { name } = req.body;
 		const category = await Category.findById(req.params.id);
@@ -54,31 +53,31 @@ const registerSubCategory = asyncHandler(async (req, res) => {
 		res.status(400);
 		throw new error();
 	}
-});
+};
 
 // @desc Get all categories
-const getCategories = asyncHandler(async (req, res) => {
+const getCategories = async (req, res) => {
 	const limit = Number(req.query.limit) || 10;
 	const page = Number(req.query.page);
 	const skipIndex = limit * (page <= 0 ? 0 : page - 1);
 	const categories = await Category.find({}).limit(limit).skip(skipIndex);
 	console.log(categories);
 	res.json(categories);
-});
+};
 
-const getCategory = asyncHandler(async (req, res) => {
-	console.log(req.params.id)
+const getCategory = async (req, res) => {
+	console.log(req.params.id);
 	const category = await Category.findById(req.params.id);
 	res.json(category);
-});
+};
 
-const getCategoryName = asyncHandler(async (req, res) => {
+const getCategoryName = async (req, res) => {
 	const category = await Category.findById(req.params.id);
 	console.log(category.name);
 	res.json(category.name);
-});
+};
 
-// const getSubCategory = asyncHandler(async (req, res) => {
+// const getSubCategory = (async (req, res) => {
 // 	const subCategory = await SubCategory.findById(req.params.id);
 // 	res.json(subCategory);
 // });
@@ -87,7 +86,7 @@ const getCategoryName = asyncHandler(async (req, res) => {
 
 // @desc Get all sub categories based on a category
 
-const getSubCategoriesByCategory = asyncHandler(async (req, res) => {
+const getSubCategoriesByCategory = async (req, res) => {
 	const category = await Category.findById(req.params.id);
 	if (category) {
 		const limit = Number(req.query.limit) || 10;
@@ -102,9 +101,9 @@ const getSubCategoriesByCategory = asyncHandler(async (req, res) => {
 		res.status(404);
 		throw new Error("Category Not Found");
 	}
-});
+};
 
-const getProductsByCategory = asyncHandler(async (req, res) => {
+const getProductsByCategory = async (req, res) => {
 	const limit = Number(req.query.limit) || 20;
 	const page = Number(req.query.page);
 	const skipIndex = (page <= 0 ? 0 : page - 1) * limit;
@@ -114,9 +113,9 @@ const getProductsByCategory = asyncHandler(async (req, res) => {
 		.limit(limit)
 		.skip(skipIndex);
 	res.json(products);
-});
+};
 
-const getProductsBySubCategory = asyncHandler(async (req, res) => {
+const getProductsBySubCategory = async (req, res) => {
 	const limit = Number(req.query.limit) || 20;
 	const page = Number(req.query.page);
 	const skipIndex = (page <= 0 ? 0 : page - 1) * limit;
@@ -126,9 +125,9 @@ const getProductsBySubCategory = asyncHandler(async (req, res) => {
 		.limit(limit)
 		.skip(skipIndex);
 	res.json(products);
-});
+};
 // @desc Get all sub categories
-const getAllSubCategories = asyncHandler(async (req, res) => {
+const getAllSubCategories = async (req, res) => {
 	try {
 		const limit = Number(req.query.limit) || 10;
 		const page = Number(req.query.page);
@@ -142,10 +141,10 @@ const getAllSubCategories = asyncHandler(async (req, res) => {
 		res.status(400);
 		throw new error();
 	}
-});
+};
 
 // @desc Get sub category by ID
-const getSubCategory = asyncHandler(async (req, res) => {
+const getSubCategory = async (req, res) => {
 	console.log(req.params.sub_id);
 	try {
 		const limit = Number(req.query.limit) || 10;
@@ -159,10 +158,10 @@ const getSubCategory = asyncHandler(async (req, res) => {
 		res.status(400);
 		throw new error();
 	}
-});
+};
 
 // @desc Update category
-const updateCategory = asyncHandler(async (req, res) => {
+const updateCategory = async (req, res) => {
 	const { name, image } = req.body;
 	const category = await Category.findById(req.params.id);
 	if (category) {
@@ -175,10 +174,10 @@ const updateCategory = asyncHandler(async (req, res) => {
 		res.status(400);
 		throw new Error("Category Not Found");
 	}
-});
+};
 
 // @desc Update category
-const updateSubCategory = asyncHandler(async (req, res) => {
+const updateSubCategory = async (req, res) => {
 	const { name, categoryId, unit, image } = req.body;
 	try {
 		const subCategory = await SubCategory.findById(req.params.sub_id);
@@ -198,7 +197,7 @@ const updateSubCategory = asyncHandler(async (req, res) => {
 		res.status(400);
 		throw new error();
 	}
-});
+};
 
 export {
 	registerCategory,
